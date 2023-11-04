@@ -95,7 +95,7 @@ resource "aws_ecs_task_definition" "my_task" {
 }
 
 resource "aws_iam_role" "execution_role" {
-  name = "ecs_execution_role"
+  name = "ecs_execution_role_tech_challenge"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
