@@ -21,7 +21,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-2" # Substitua pela sua região AWS desejada
+  region = "us-east-2"  # Substitua pela região desejada
 }
 
 locals {
@@ -63,19 +63,15 @@ module "vpc" {
   }
 }
 
-resource "aws_ecs_cluster" "sgr-service-cluster" {
-  name = "sgr-service-cluster"
+resource "aws_ecs_cluster" "my_cluster" {
+  name = "my-ecs-cluster"
 }
 
-# resource "aws_ecr_repository" "sgr-service" {
-#   name = "sgr-service"
-# }
-
-resource "aws_ecs_task_definition" "tech-challenge-task" {
-  family                   = "tech-challenge"
+resource "aws_ecs_task_definition" "my_task" {
+  family                   = "my-task-family"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn  # Certifique-se de criar essa role (veja abaixo)
   cpu                      = 256
   memory                   = 512
   runtime_platform {
@@ -83,48 +79,44 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
     operating_system_family = "LINUX"
   }
 
-  container_definitions = jsonencode([{
-    name  = "sgr-service"
-    image = "190197150713.dkr.ecr.us-east-2.amazonaws.com/sgr-service:sgr-service"
-  }])
+  container_definitions = jsonencode([
+    {
+      name  = "my-container",
+      image = "nginx:latest",
+      portMappings = [
+        {
+          containerPort = 80,
+          hostPort      = 80,
+        }
+      ],
+    }
+    # Adicione mais definições de contêiner, se necessário
+  ])
 }
 
-resource "aws_iam_role" "ecs_execution_role" {
+resource "aws_iam_role" "execution_role" {
   name = "ecs_execution_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
-    Statement = [{
-      Action = "sts:AssumeRole",
-      Effect = "Allow",
-      Principal = {
-        Service = "ecs-tasks.amazonaws.com"
-      }
-    }]
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com",
+        },
+      },
+    ],
   })
 }
 
-resource "aws_ecs_service" "ecs-service" {
-  name            = "ecs-service"
-  cluster         = aws_ecs_cluster.sgr-service-cluster.id
-  task_definition = aws_ecs_task_definition.tech-challenge-task.arn
+resource "aws_ecs_service" "my_service" {
+  name            = "my-ecs-service"
+  cluster         = aws_ecs_cluster.my_cluster.id
+  task_definition = aws_ecs_task_definition.my_task.arn
   launch_type     = "FARGATE"
-
   network_configuration {
     subnets = module.vpc.private_subnets # Substitua pelo ID da sua subnet
   }
-
-  depends_on = [aws_ecs_task_definition.tech-challenge-task]
 }
-
-# resource "aws_security_group" "tech-sg" {
-#   name        = "tech-sg"
-#   description = "My security group for ECS tasks"
-
-#   ingress {
-#     from_port   = 8083
-#     to_port     = 8083
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-# }
