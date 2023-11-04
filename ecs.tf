@@ -76,7 +76,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
-  cpu                      = 0.5
+  cpu                      = 1
   memory                   = 512
 
 
