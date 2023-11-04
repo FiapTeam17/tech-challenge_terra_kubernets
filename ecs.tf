@@ -67,8 +67,9 @@ resource "aws_ecs_cluster" "sgr-service-cluster" {
   name = "sgr-service-cluster"
 }
 
-resource "aws_ecr_repository" "sgr-service-repository" {
-  name = "	sgr-service-repository"
+resource "aws_ecr_repository" "sgr-service" {
+  name = "sgr-service"
+  
 }
 
 resource "aws_ecs_task_definition" "tech-challenge-task" {
@@ -82,7 +83,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
 
   container_definitions = jsonencode([{
     name  = "sgr-service"
-    image = aws_ecr_repository.sgr-service-repository.repository_url
+    image = aws_ecr_repository.sgr-service.repository_url
   }])
 }
 
