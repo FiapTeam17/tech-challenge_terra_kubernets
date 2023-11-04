@@ -24,6 +24,45 @@ provider "aws" {
   region = "us-east-2" # Substitua pela sua região AWS desejada
 }
 
+locals {
+  name   = "sgr-vpc"
+  region = "us-east-2"
+
+  vpc_cidr = "10.123.0.0/16"
+  azs      = ["us-east-2a", "us-east-2b"]
+
+  public_subnets  = ["10.123.1.0/24", "10.123.2.0/24"]
+  private_subnets = ["10.123.3.0/24", "10.123.4.0/24"]
+  intra_subnets   = ["10.123.5.0/24", "10.123.6.0/24"]
+
+  tags = {
+    Example = local.name
+  }
+}
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 4.0"
+
+  name = local.name
+  cidr = local.vpc_cidr
+
+  azs             = local.azs
+  private_subnets = local.private_subnets
+  public_subnets  = local.public_subnets
+  intra_subnets   = local.intra_subnets
+
+  enable_nat_gateway = true
+
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = 1
+  }
+
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb" = 1
+  }
+}
+
 resource "aws_ecs_cluster" "sgr-service-cluster" {
   name = "sgr-service-cluster"
 }
@@ -36,7 +75,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
   family                   = "tech-challenge"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  execution_role_arn        = aws_iam_role.ecs_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
 
   container_definitions = jsonencode([{
     name  = "sgr-service"
@@ -66,7 +105,7 @@ resource "aws_ecs_service" "ecs-service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets = ["subnet-xxxxxxxxxxxxxx"] # Substitua pelo ID da sua subnet
+    subnets         = local.public_subnets # Substitua pelo ID da sua subnet
     security_groups = [aws_security_group.tech-sg.id]
   }
 
