@@ -69,7 +69,7 @@ resource "aws_ecs_cluster" "sgr-service-cluster" {
 
 resource "aws_ecr_repository" "sgr-service" {
   name = "sgr-service"
-  
+
 }
 
 resource "aws_ecs_task_definition" "tech-challenge-task" {
