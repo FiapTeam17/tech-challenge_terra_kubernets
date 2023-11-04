@@ -105,7 +105,7 @@ resource "aws_iam_role" "ecs_execution_role" {
 }
 
 resource "aws_ecs_service" "ecs-service" {
-  name            = "ecs-service"
+  name            = "sgr-service-ecs"
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task.arn
   launch_type     = "FARGATE"

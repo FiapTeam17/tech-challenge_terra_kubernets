@@ -54,7 +54,7 @@ jobs:
           TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Update ECS Service
-        run: aws ecs update-service --cluster sgr-service-cluster --service sgr-service --force-new-deployment
+        run: aws ecs update-service --cluster sgr-service-cluster --service sgr-service-ecs --force-new-deployment
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
