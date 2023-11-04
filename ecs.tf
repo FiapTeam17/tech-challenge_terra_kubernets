@@ -79,7 +79,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
 
   container_definitions = jsonencode([{
     name  = "sgr-service"
-    image = aws_ecr_repository.sgr-service.repository_url
+    image = aws_ecr_repository.sgr-service-repository.repository_url
   }])
 }
 
