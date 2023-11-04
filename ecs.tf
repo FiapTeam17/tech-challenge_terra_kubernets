@@ -112,20 +112,19 @@ resource "aws_ecs_service" "ecs-service" {
 
   network_configuration {
     subnets         = module.vpc.private_subnets # Substitua pelo ID da sua subnet
-    security_groups = [aws_security_group.tech-sg.id]
   }
 
   depends_on = [aws_ecs_task_definition.tech-challenge-task]
 }
 
-resource "aws_security_group" "tech-sg" {
-  name        = "tech-sg"
-  description = "My security group for ECS tasks"
+# resource "aws_security_group" "tech-sg" {
+#   name        = "tech-sg"
+#   description = "My security group for ECS tasks"
 
-  ingress {
-    from_port   = 8083
-    to_port     = 8083
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
+#   ingress {
+#     from_port   = 8083
+#     to_port     = 8083
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+# }
