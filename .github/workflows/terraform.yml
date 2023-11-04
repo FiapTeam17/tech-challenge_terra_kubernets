@@ -3,7 +3,7 @@ name: "Terraform"
 on:
   push:
     branches:
-      - release
+      - dev
   # pull_request:
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-      
+
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
@@ -98,4 +98,3 @@ jobs:
           service: ecs-service
           cluster: sgr-service-cluster
           wait-for-service-stability: true
-
