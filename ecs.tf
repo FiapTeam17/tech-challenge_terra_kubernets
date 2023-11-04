@@ -111,7 +111,7 @@ resource "aws_ecs_service" "ecs-service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = module.vpc.private_subnets # Substitua pelo ID da sua subnet
+    subnets = module.vpc.private_subnets # Substitua pelo ID da sua subnet
   }
 
   depends_on = [aws_ecs_task_definition.tech-challenge-task]
