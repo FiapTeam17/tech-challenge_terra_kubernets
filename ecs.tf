@@ -111,7 +111,7 @@ resource "aws_ecs_service" "ecs-service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = local.public_subnets # Substitua pelo ID da sua subnet
+    subnets         = module.vpc.private_subnets # Substitua pelo ID da sua subnet
     security_groups = [aws_security_group.tech-sg.id]
   }
 
