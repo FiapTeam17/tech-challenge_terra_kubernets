@@ -64,11 +64,11 @@ module "vpc" {
 }
 
 resource "aws_ecs_cluster" "my_cluster" {
-  name = "my-ecs-cluster"
+  name = "sgr-service-cluster"
 }
 
 resource "aws_ecs_task_definition" "my_task" {
-  family                   = "my-task-family"
+  family                   = "tech-challenge"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.execution_role.arn # Certifique-se de criar essa role (veja abaixo)
@@ -112,7 +112,7 @@ resource "aws_iam_role" "execution_role" {
 }
 
 resource "aws_ecs_service" "my_service" {
-  name            = "my-ecs-service"
+  name            = "sgr-service"
   cluster         = aws_ecs_cluster.my_cluster.id
   task_definition = aws_ecs_task_definition.my_task.arn
   launch_type     = "FARGATE"
