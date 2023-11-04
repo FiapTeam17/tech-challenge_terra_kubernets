@@ -21,7 +21,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-2"  # Substitua pela região desejada
+  region = "us-east-2" # Substitua pela região desejada
 }
 
 locals {
@@ -71,7 +71,7 @@ resource "aws_ecs_task_definition" "my_task" {
   family                   = "my-task-family"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  execution_role_arn       = aws_iam_role.execution_role.arn  # Certifique-se de criar essa role (veja abaixo)
+  execution_role_arn       = aws_iam_role.execution_role.arn # Certifique-se de criar essa role (veja abaixo)
   cpu                      = 256
   memory                   = 512
   runtime_platform {
