@@ -1,10 +1,9 @@
-name: "Terraform"
+name: "Deploy to ECS"
 
 on:
   push:
     branches:
       - dev
-  # pull_request:
 
 jobs:
   terraform:
@@ -40,36 +39,6 @@ jobs:
         run: terraform plan -no-color -input=false
         continue-on-error: true
 
-      # - name: Update Pull Request
-      #   uses: actions/github-script@v6
-      #   # if: github.event_name == 'pull_request'
-      #   env:
-      #     PLAN: ${{ steps.plan.outputs.stdout }}
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-      #       #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-      #       #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-      #       #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-      #       <details><summary>Show Plan</summary>
-
-      #       \`\`\`terraform\n
-      #       ${process.env.PLAN}
-      #       \`\`\`
-
-      #       </details>
-
-      #       *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-      #       github.rest.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: output
-      #       })
-
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
@@ -78,23 +47,15 @@ jobs:
         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
 
-      - name: Download task definition
-        run: |
-          aws ecs describe-task-definition --task-definition tech-challenge \
-          --query taskDefinition > task-definition.json
+      - name: Deploy infrastructure with Terraform
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: application
-          image: 190197150713.dkr.ecr.us-east-2.amazonaws.com/sgr-service:sgr-service
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ecs-service
-          cluster: sgr-service-cluster
-          wait-for-service-stability: true
+      - name: Update ECS Service
+        run: aws ecs update-service --cluster <your-cluster> --service <your-service> --force-new-deployment
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1 # Substitua pela região desejada
