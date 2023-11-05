@@ -111,57 +111,15 @@ resource "aws_iam_role" "ecs_execution_role" {
   name = "ecs_execution_role"
 
   assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "imagebuilder:GetComponent",
-                "imagebuilder:GetContainerRecipe",
-                "ecr:GetAuthorizationToken",
-                "ecr:BatchGetImage",
-                "ecr:InitiateLayerUpload",
-                "ecr:UploadLayerPart",
-                "ecr:CompleteLayerUpload",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:PutImage"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "kms:Decrypt"
-            ],
-            "Resource": "*",
-            "Condition": {
-                "ForAnyValue:StringEquals": {
-                    "kms:EncryptionContextKeys": "aws:imagebuilder:arn",
-                    "aws:CalledVia": [
-                        "imagebuilder.amazonaws.com"
-                    ]
-                }
-            }
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:GetObject"
-            ],
-            "Resource": "arn:aws:s3:::ec2imagebuilder*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogStream",
-                "logs:CreateLogGroup",
-                "logs:PutLogEvents"
-            ],
-            "Resource": "arn:aws:logs:*:*:log-group:/aws/imagebuilder/*"
-        }
-    ]
-})
+    Version = "2012-10-17",
+    Statement = [{
+      Action = "sts:AssumeRole",
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      }
+    }]
+  })
 }
 
 resource "aws_ecs_service" "ecs-service" {
