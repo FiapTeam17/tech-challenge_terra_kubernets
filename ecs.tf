@@ -107,6 +107,35 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
   }])
 }
 
+variable "iam_policy_name" {
+  type    = string
+  default = "ecs-iam-policy"
+}
+
+resource "aws_iam_policy" "ecs-iam-policy" {
+  name = var.iam_policy_name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetRepositoryPolicy",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role" "ecs_execution_role" {
   name = "ecs_execution_role"
 
@@ -122,6 +151,13 @@ resource "aws_iam_role" "ecs_execution_role" {
       }
     ]
   })
+}
+
+# Attach the IAM policy to the IAM role
+resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
+  name = "Policy Attachement"
+  policy_arn = aws_iam_policy.ecs-iam-policy.arn
+  roles       = [aws_iam_role.ecs_execution_role.name]
 }
 
 resource "aws_ecs_service" "ecs-service" {
