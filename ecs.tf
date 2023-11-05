@@ -15,7 +15,7 @@ terraform {
     organization = "sgr-fiap-17"
 
     workspaces {
-      name = "rds-tr"
+      name = "ecs-workspace"
     }
   }
 }
@@ -113,7 +113,16 @@ resource "aws_iam_role" "ecs_execution_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
-      Action = "sts:AssumeRole",
+      Action = [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchGetImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:UploadLayerPart",
+        "ecr:CompleteLayerUpload",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:PutImage"
+      ],
       Effect = "Allow",
       Principal = {
         Service = "ecs-tasks.amazonaws.com"
