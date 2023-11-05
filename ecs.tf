@@ -40,29 +40,6 @@ locals {
   }
 }
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 4.0"
-
-  name = local.name
-  cidr = local.vpc_cidr
-
-  azs             = local.azs
-  private_subnets = local.private_subnets
-  public_subnets  = local.public_subnets
-  intra_subnets   = local.intra_subnets
-
-  enable_nat_gateway = true
-
-  public_subnet_tags = {
-    "kubernetes.io/role/elb" = 1
-  }
-
-  private_subnet_tags = {
-    "kubernetes.io/role/internal-elb" = 1
-  }
-}
-
 resource "aws_ecs_cluster" "sgr-service-cluster" {
   name = "sgr-service-cluster"
 }
@@ -160,11 +137,6 @@ resource "aws_ecs_service" "ecs-service" {
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task.arn
   launch_type     = "FARGATE"
-
-  network_configuration {
-    subnets = module.vpc.public_subnets # Substitua pelo ID da sua subnet
-  }
-
   depends_on = [aws_ecs_task_definition.tech-challenge-task]
 }
 
