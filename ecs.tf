@@ -121,14 +121,9 @@ resource "aws_iam_policy" "ecs-iam-policy" {
       {
         Effect = "Allow"
         Action = [
-          "ecr:GetAuthorizationToken",
-          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
           "ecr:GetDownloadUrlForLayer",
-          "ecr:GetRepositoryPolicy",
-          "ecr:InitiateLayerUpload",
-          "ecr:PutImage",
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:GetDownloadUrlForLayer"
+          "ecr:GetAuthorizationToken"
         ]
         Resource = "*"
       }
