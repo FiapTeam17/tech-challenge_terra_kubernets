@@ -115,12 +115,8 @@ resource "aws_iam_role" "ecs_execution_role" {
     "Statement" : [
       {
         "Effect" : "Allow",
-        "Action" : "ecr:GetAuthorizationToken",
-        "Resource" : "*"
-      },
-      {
-        "Effect" : "Allow",
         "Action" : [
+          "ecr:GetAuthorizationToken",
           "ecr:GetDownloadUrlForLayer",
           "ecr:GetRepositoryPolicy",
           "ecr:ListImages",
@@ -129,8 +125,7 @@ resource "aws_iam_role" "ecs_execution_role" {
           "ecr:GetLifecyclePolicyPreview",
           "ecr:ListTagsForResource",
           "ecr:DescribeImages"
-        ],
-        "Resource" : "arn:aws:ecr:us-east-2:190197150713:repository/sgr-service"
+        ]
       }
     ]
   })
