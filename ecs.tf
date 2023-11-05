@@ -137,7 +137,12 @@ resource "aws_ecs_service" "ecs-service" {
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task.arn
   launch_type     = "FARGATE"
-  depends_on      = [aws_ecs_task_definition.tech-challenge-task]
+  network_configuration {
+    assign_public_ip = true
+    security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+  }
+  depends_on = [aws_ecs_task_definition.tech-challenge-task]
 }
 
 # resource "aws_security_group" "tech-sg" {
