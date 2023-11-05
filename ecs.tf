@@ -137,7 +137,7 @@ resource "aws_ecs_service" "ecs-service" {
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task.arn
   launch_type     = "FARGATE"
-  depends_on = [aws_ecs_task_definition.tech-challenge-task]
+  depends_on      = [aws_ecs_task_definition.tech-challenge-task]
 }
 
 # resource "aws_security_group" "tech-sg" {
