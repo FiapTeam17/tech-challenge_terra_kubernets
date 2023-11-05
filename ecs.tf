@@ -130,7 +130,7 @@ resource "aws_iam_role" "ecs_execution_role" {
           "ecr:ListTagsForResource",
           "ecr:DescribeImages"
         ],
-        "Resource" : "*"
+        "Resource" : "arn:aws:ecr:us-east-2:190197150713:repository/sgr-service"
       }
     ]
   })
