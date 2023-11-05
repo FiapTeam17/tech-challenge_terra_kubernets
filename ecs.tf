@@ -62,7 +62,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
 
   container_definitions = jsonencode([{
     name  = "sgr-service"
-    image = "190197150713.dkr.ecr.us-east-2.amazonaws.com/sgr-service:sgr-service"
+    image = "190197150713.dkr.ecr.us-east-2.amazonaws.com/sgr-service:latest"
     environment : [
       {
         "name" : "DB_USERNAME",
@@ -78,7 +78,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
       },
       {
         "name" : "DB_PASSWORD",
-        "value" : "senhamysqlrds"
+        "value" : var.mssql_login_pwd
       }
     ],
   }])
@@ -145,15 +145,3 @@ resource "aws_ecs_service" "ecs-service" {
   desired_count = 1
   depends_on    = [aws_ecs_task_definition.tech-challenge-task]
 }
-
-# resource "aws_security_group" "tech-sg" {
-#   name        = "tech-sg"
-#   description = "My security group for ECS tasks"
-
-#   ingress {
-#     from_port   = 8083
-#     to_port     = 8083
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-# }
