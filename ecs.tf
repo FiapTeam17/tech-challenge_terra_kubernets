@@ -86,6 +86,24 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
   container_definitions = jsonencode([{
     name  = "sgr-service"
     image = "190197150713.dkr.ecr.us-east-2.amazonaws.com/sgr-service:sgr-service"
+    environment : [
+      {
+        "name" : "DB_USERNAME",
+        "value" : "root"
+      },
+      {
+        "name" : "DB_HOST",
+        "value" : "sgr-rds-instance.cu7yj3gjjks1.us-east-2.rds.amazonaws.com"
+      },
+      {
+        "name" : "DB_SCHEMA",
+        "value" : "sgr_database"
+      },
+      {
+        "name" : "DB_PASSWORD",
+        "value" : "senhamysqlrds"
+      }
+    ],
   }])
 }
 
