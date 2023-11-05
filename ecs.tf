@@ -143,7 +143,7 @@ resource "aws_ecs_service" "ecs-service" {
     subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
   }
   desired_count = 1
-  depends_on = [aws_ecs_task_definition.tech-challenge-task]
+  depends_on    = [aws_ecs_task_definition.tech-challenge-task]
 }
 
 # resource "aws_security_group" "tech-sg" {
