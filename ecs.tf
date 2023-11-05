@@ -155,9 +155,9 @@ resource "aws_iam_role" "ecs_execution_role" {
 
 # Attach the IAM policy to the IAM role
 resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
-  name = "Policy Attachement"
+  name       = "Policy Attachement"
   policy_arn = aws_iam_policy.ecs-iam-policy.arn
-  roles       = [aws_iam_role.ecs_execution_role.name]
+  roles      = [aws_iam_role.ecs_execution_role.name]
 }
 
 resource "aws_ecs_service" "ecs-service" {
