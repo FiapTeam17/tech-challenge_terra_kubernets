@@ -165,9 +165,11 @@ resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
 }
 
 resource "aws_ecs_service" "ecs-service" {
-  name            = "sgr-service-ecs"
+  for_each = aws_ecs_task_definition.tech-challenge-task
+
+  name            = "sgr-service-ecs${each.key}"
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
-  task_definition = aws_ecs_task_definition.tech-challenge-task.arn
+  task_definition = aws_ecs_task_definition.tech-challenge-task[each.key].arn
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
