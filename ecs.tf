@@ -48,7 +48,9 @@ resource "aws_ecs_cluster" "sgr-service-cluster" {
 #   name = "sgr-service"
 # }
 
-resource "aws_ecs_task_definition" "tech-challenge-task" {
+# ======================== DEFINITIONS ========================
+
+resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
 
   for_each = var.ecs_containers
 
@@ -64,8 +66,8 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
   }
 
   container_definitions = jsonencode([{
-    name  = each.key
-    image = each.value.image
+    name  = "sgr-service-task-pedido"
+    image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pedido"
     environment : [
       {
         "name" : "DB_USERNAME",
@@ -73,11 +75,50 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
       },
       {
         "name" : "DB_HOST",
-        "value" : each.value.db_host
+        "value" : "sgr-rds-instance-pedido.c5c6gu62ikas.us-east-2.rds.amazonaws.com"
       },
       {
         "name" : "DB_SCHEMA",
-        "value" : each.value.db_schema
+        "value" : "sgr_database_pedido"
+      },
+      {
+        "name" : "DB_PASSWORD",
+        "value" : var.mssql_login_pwd
+      }
+    ],
+  }])
+}
+
+resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
+
+  for_each = var.ecs_containers
+
+  family                   = "tech-challenge"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+  cpu                      = 256
+  memory                   = 512
+  runtime_platform {
+    cpu_architecture        = "X86_64"
+    operating_system_family = "LINUX"
+  }
+
+  container_definitions = jsonencode([{
+    name  = "sgr-service-task-producao"
+    image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-producao"
+    environment : [
+      {
+        "name" : "DB_USERNAME",
+        "value" : "root"
+      },
+      {
+        "name" : "DB_HOST",
+        "value" : "sgr-rds-instance-producao.c5c6gu62ikas.us-east-2.rds.amazonaws.com"
+      },
+      {
+        "name" : "DB_SCHEMA",
+        "value" : "sgr_database_producao"
       },
       {
         "name" : "DB_PASSWORD",
@@ -158,18 +199,21 @@ resource "aws_iam_role" "ecs_execution_role" {
 }
 
 # Attach the IAM policy to the IAM role
+
 resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
   name       = "Policy Attachement"
   policy_arn = aws_iam_policy.ecs-iam-policy.arn
   roles      = [aws_iam_role.ecs_execution_role.name]
 }
 
-resource "aws_ecs_service" "ecs-service" {
+
+# ======================== SERVICES ========================
+resource "aws_ecs_service" "ecs-service-pedido" {
   for_each = aws_ecs_task_definition.tech-challenge-task
 
-  name            = "sgr-service-ecs${each.key}"
+  name            = "sgr-service-ecs-pedido"
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
-  task_definition = aws_ecs_task_definition.tech-challenge-task[each.key].arn
+  task_definition = aws_ecs_task_definition.tech-challenge-task-pedido.arn
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
@@ -177,7 +221,23 @@ resource "aws_ecs_service" "ecs-service" {
     subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
   }
   desired_count = 1
-  depends_on    = [aws_ecs_task_definition.tech-challenge-task]
+  depends_on    = [aws_ecs_task_definition.tech-challenge-task-pedido]
+}
+
+resource "aws_ecs_service" "ecs-service-producao" {
+  for_each = aws_ecs_task_definition.tech-challenge-task
+
+  name            = "sgr-service-ecs-producao"
+  cluster         = aws_ecs_cluster.sgr-service-cluster.id
+  task_definition = aws_ecs_task_definition.tech-challenge-task-producao.arn
+  launch_type     = "FARGATE"
+  network_configuration {
+    assign_public_ip = true
+    security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+  }
+  desired_count = 1
+  depends_on    = [aws_ecs_task_definition.tech-challenge-task-producao]
 }
 
 resource "aws_ecs_service" "ecs-service-mongo" {
