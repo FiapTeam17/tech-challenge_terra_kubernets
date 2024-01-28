@@ -49,6 +49,9 @@ resource "aws_ecs_cluster" "sgr-service-cluster" {
 # }
 
 resource "aws_ecs_task_definition" "tech-challenge-task" {
+
+  for_each = var.ecs_containers 
+
   family                   = "tech-challenge"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -61,8 +64,8 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
   }
 
   container_definitions = jsonencode([{
-    name  = "sgr-service"
-    image = "190197150713.dkr.ecr.us-east-2.amazonaws.com/sgr-service:latest"
+    name  = each.key
+    image = each.value.image
     environment : [
       {
         "name" : "DB_USERNAME",
@@ -70,11 +73,11 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
       },
       {
         "name" : "DB_HOST",
-        "value" : "sgr-rds-instance.cu7yj3gjjks1.us-east-2.rds.amazonaws.com"
+        "value" : each.value.db_host
       },
       {
         "name" : "DB_SCHEMA",
-        "value" : "sgr_database"
+        "value" : each.value.db_schema
       },
       {
         "name" : "DB_PASSWORD",
