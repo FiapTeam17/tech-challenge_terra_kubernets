@@ -52,8 +52,6 @@ resource "aws_ecs_cluster" "sgr-service-cluster" {
 
 resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
 
-  for_each = var.ecs_containers
-
   family                   = "tech-challenge"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -90,8 +88,6 @@ resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
 }
 
 resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
-
-  for_each = var.ecs_containers
 
   family                   = "tech-challenge"
   network_mode             = "awsvpc"
@@ -209,8 +205,6 @@ resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
 
 # ======================== SERVICES ========================
 resource "aws_ecs_service" "ecs-service-pedido" {
-  for_each = aws_ecs_task_definition.tech-challenge-task
-
   name            = "sgr-service-ecs-pedido"
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-pedido.arn
@@ -225,8 +219,6 @@ resource "aws_ecs_service" "ecs-service-pedido" {
 }
 
 resource "aws_ecs_service" "ecs-service-producao" {
-  for_each = aws_ecs_task_definition.tech-challenge-task
-
   name            = "sgr-service-ecs-producao"
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-producao.arn
