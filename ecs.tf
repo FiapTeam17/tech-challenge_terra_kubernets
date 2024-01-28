@@ -233,7 +233,7 @@ resource "aws_ecs_service" "ecs-service-producao" {
 }
 
 resource "aws_ecs_service" "ecs-service-mongo" {
-  name            = "sgr-service-ecs"
+  name            = "sgr-service-ecs-mongo"
   cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-mongo.arn
   launch_type     = "FARGATE"
