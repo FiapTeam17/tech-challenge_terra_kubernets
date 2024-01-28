@@ -27,11 +27,6 @@ variable "ecs_containers" {
       image     = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-producao"
       db_host   = "sgr-rds-instance-producao.c5c6gu62ikas.us-east-2.rds.amazonaws.com"
       db_schema = "sgr_database_producao"
-    },
-    "pagamento_service" = {
-      image     = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pagamento"
-      db_host   = var.mongodb_connection_string
-      db_schema = "sgr_database_pagamento"
     }
   }
 

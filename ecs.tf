@@ -87,6 +87,35 @@ resource "aws_ecs_task_definition" "tech-challenge-task" {
   }])
 }
 
+resource "aws_ecs_task_definition" "tech-challenge-task-mongo" {
+
+  family                   = "tech-challenge"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+  cpu                      = 256
+  memory                   = 512
+  runtime_platform {
+    cpu_architecture        = "X86_64"
+    operating_system_family = "LINUX"
+  }
+
+  container_definitions = jsonencode([{
+    name  = "pagamento_service"
+    image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pagamento"
+    environment : [
+      {
+        "name" : "MONGODB_CONNECTION_STRING",
+        "value" : var.mongodb_connection_string
+      },
+      {
+        "name" : "DB_SCHEMA",
+        "value" : "sgr_database_pagamento"
+      },
+    ],
+  }])
+}
+
 variable "iam_policy_name" {
   type    = string
   default = "ecs-iam-policy"
