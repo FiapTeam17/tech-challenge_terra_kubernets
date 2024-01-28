@@ -40,7 +40,7 @@ locals {
   }
 }
 
-resource "aws_ecs_cluster" "sgr-service-cluster" {
+resource "aws_ecs_cluster" "sgr-microsservices-cluster" {
   name = "sgr-service-cluster"
 }
 
@@ -206,7 +206,7 @@ resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
 # ======================== SERVICES ========================
 resource "aws_ecs_service" "ecs-service-pedido" {
   name            = "sgr-service-ecs-pedido"
-  cluster         = aws_ecs_cluster.sgr-service-cluster.id
+  cluster         = aws_ecs_cluster.sgr-microsservices-cluster
   task_definition = aws_ecs_task_definition.tech-challenge-task-pedido.arn
   launch_type     = "FARGATE"
   network_configuration {
@@ -220,7 +220,7 @@ resource "aws_ecs_service" "ecs-service-pedido" {
 
 resource "aws_ecs_service" "ecs-service-producao" {
   name            = "sgr-service-ecs-producao"
-  cluster         = aws_ecs_cluster.sgr-service-cluster.id
+  cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-producao.arn
   launch_type     = "FARGATE"
   network_configuration {
@@ -234,7 +234,7 @@ resource "aws_ecs_service" "ecs-service-producao" {
 
 resource "aws_ecs_service" "ecs-service-mongo" {
   name            = "sgr-service-ecs"
-  cluster         = aws_ecs_cluster.sgr-service-cluster.id
+  cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-mongo.arn
   launch_type     = "FARGATE"
   network_configuration {
