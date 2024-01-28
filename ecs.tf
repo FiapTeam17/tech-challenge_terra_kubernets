@@ -41,7 +41,7 @@ locals {
 }
 
 resource "aws_ecs_cluster" "sgr-microsservices-cluster" {
-  name = "sgr-service-cluster"
+  name = "sgr-microsservices-cluster"
 }
 
 # resource "aws_ecr_repository" "sgr-service" {
@@ -206,7 +206,7 @@ resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
 # ======================== SERVICES ========================
 resource "aws_ecs_service" "ecs-service-pedido" {
   name            = "sgr-service-ecs-pedido"
-  cluster         = aws_ecs_cluster.sgr-microsservices-cluster
+  cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-pedido.arn
   launch_type     = "FARGATE"
   network_configuration {
