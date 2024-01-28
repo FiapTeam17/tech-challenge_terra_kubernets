@@ -213,7 +213,7 @@ resource "aws_ecs_service" "ecs-service-pedido" {
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
-    # security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    security_groups  = ["sg-0d053c973d19dc904"]
     # subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
     subnets = local.subnets
   }
@@ -228,7 +228,7 @@ resource "aws_ecs_service" "ecs-service-producao" {
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
-    # security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    security_groups  = ["sg-0d053c973d19dc904"]
     # subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
     subnets = local.subnets
   }
@@ -243,7 +243,7 @@ resource "aws_ecs_service" "ecs-service-mongo" {
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
-    # security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    security_groups  = ["sg-0d053c973d19dc904"]
     # subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
     subnets = local.subnets
   }
