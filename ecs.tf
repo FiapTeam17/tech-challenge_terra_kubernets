@@ -52,7 +52,7 @@ resource "aws_ecs_cluster" "sgr-microsservices-cluster" {
 
 resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
 
-  family                   = "tech-challenge"
+  family                   = "tech-challenge-services"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
@@ -89,7 +89,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
 
 resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
 
-  family                   = "tech-challenge"
+  family                   = "tech-challenge-services"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
@@ -126,7 +126,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
 
 resource "aws_ecs_task_definition" "tech-challenge-task-mongo" {
 
-  family                   = "tech-challenge"
+  family                   = "tech-challenge-services"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
@@ -138,7 +138,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task-mongo" {
   }
 
   container_definitions = jsonencode([{
-    name  = "pagamento_service"
+    name  = "sgr-service-task-pagamento"
     image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pagamento"
     environment : [
       {
@@ -205,7 +205,7 @@ resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
 
 # ======================== SERVICES ========================
 resource "aws_ecs_service" "ecs-service-pedido" {
-  name            = "sgr-service-ecs-pedido"
+  name            = "pedido-sgr-service-ecs"
   cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-pedido.arn
   launch_type     = "FARGATE"
@@ -219,7 +219,7 @@ resource "aws_ecs_service" "ecs-service-pedido" {
 }
 
 resource "aws_ecs_service" "ecs-service-producao" {
-  name            = "sgr-service-ecs-producao"
+  name            = "producao-sgr-service-ecs"
   cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-producao.arn
   launch_type     = "FARGATE"
@@ -233,7 +233,7 @@ resource "aws_ecs_service" "ecs-service-producao" {
 }
 
 resource "aws_ecs_service" "ecs-service-mongo" {
-  name            = "sgr-service-ecs-mongo"
+  name            = "mongosgr-service-ecs"
   cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task-mongo.arn
   launch_type     = "FARGATE"
