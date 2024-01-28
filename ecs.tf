@@ -50,42 +50,42 @@ resource "aws_ecs_cluster" "sgr-microsservices-cluster" {
 
 # ======================== DEFINITIONS ========================
 
-# resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
+resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
 
-#   family                   = "tech-challenge-services"
-#   network_mode             = "awsvpc"
-#   requires_compatibilities = ["FARGATE"]
-#   # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
-#   cpu    = 256
-#   memory = 512
-#   runtime_platform {
-#     cpu_architecture        = "X86_64"
-#     operating_system_family = "LINUX"
-#   }
+  family                   = "tech-challenge-services"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+  cpu    = 256
+  memory = 512
+  runtime_platform {
+    cpu_architecture        = "X86_64"
+    operating_system_family = "LINUX"
+  }
 
-#   container_definitions = jsonencode([{
-#     name  = "sgr-service-task-pedido"
-#     image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pedido"
-#     environment : [
-#       {
-#         "name" : "DB_USERNAME",
-#         "value" : "root"
-#       },
-#       {
-#         "name" : "DB_HOST",
-#         "value" : "sgr-rds-instance-pedido.c5c6gu62ikas.us-east-2.rds.amazonaws.com"
-#       },
-#       {
-#         "name" : "DB_SCHEMA",
-#         "value" : "sgr_database_pedido"
-#       },
-#       {
-#         "name" : "DB_PASSWORD",
-#         "value" : var.mssql_login_pwd
-#       }
-#     ],
-#   }])
-# }
+  container_definitions = jsonencode([{
+    name  = "sgr-service-task-pedido"
+    image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pedido"
+    environment : [
+      {
+        "name" : "DB_USERNAME",
+        "value" : "root"
+      },
+      {
+        "name" : "DB_HOST",
+        "value" : "sgr-rds-instance-pedido.c5c6gu62ikas.us-east-2.rds.amazonaws.com"
+      },
+      {
+        "name" : "DB_SCHEMA",
+        "value" : "sgr_database_pedido"
+      },
+      {
+        "name" : "DB_PASSWORD",
+        "value" : var.mssql_login_pwd
+      }
+    ],
+  }])
+}
 
 # resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
 
@@ -124,34 +124,34 @@ resource "aws_ecs_cluster" "sgr-microsservices-cluster" {
 #   }])
 # }
 
-resource "aws_ecs_task_definition" "tech-challenge-task-mongo" {
+# resource "aws_ecs_task_definition" "tech-challenge-task-mongo" {
 
-  family                   = "tech-challenge-services"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
-  cpu    = 256
-  memory = 512
-  runtime_platform {
-    cpu_architecture        = "X86_64"
-    operating_system_family = "LINUX"
-  }
+#   family                   = "tech-challenge-services"
+#   network_mode             = "awsvpc"
+#   requires_compatibilities = ["FARGATE"]
+#   # execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+#   cpu    = 256
+#   memory = 512
+#   runtime_platform {
+#     cpu_architecture        = "X86_64"
+#     operating_system_family = "LINUX"
+#   }
 
-  container_definitions = jsonencode([{
-    name  = "sgr-service-task-pagamento"
-    image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pagamento"
-    environment : [
-      {
-        "name" : "MONGODB_CONNECTION_STRING",
-        "value" : var.mongodb_connection_string
-      },
-      {
-        "name" : "DB_SCHEMA",
-        "value" : "sgr_database_pagamento"
-      },
-    ],
-  }])
-}
+#   container_definitions = jsonencode([{
+#     name  = "sgr-service-task-pagamento"
+#     image = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pagamento"
+#     environment : [
+#       {
+#         "name" : "MONGODB_CONNECTION_STRING",
+#         "value" : var.mongodb_connection_string
+#       },
+#       {
+#         "name" : "DB_SCHEMA",
+#         "value" : "sgr_database_pagamento"
+#       },
+#     ],
+#   }])
+# }
 
 variable "iam_policy_name" {
   type    = string
@@ -204,19 +204,19 @@ resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
 
 
 # ======================== SERVICES ========================
-# resource "aws_ecs_service" "ecs-service-pedido" {
-#   name            = "pedido-sgr-service-ecs"
-#   cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
-#   task_definition = aws_ecs_task_definition.tech-challenge-task-pedido.arn
-#   launch_type     = "FARGATE"
-#   network_configuration {
-#     assign_public_ip = true
-#     security_groups  = ["sg-05f8d8ff2e7f81bcc"]
-#     subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
-#   }
-#   desired_count = 1
-#   depends_on    = [aws_ecs_task_definition.tech-challenge-task-pedido]
-# }
+resource "aws_ecs_service" "ecs-service-pedido" {
+  name            = "pedido-sgr-service-ecs"
+  cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
+  task_definition = aws_ecs_task_definition.tech-challenge-task-pedido.arn
+  launch_type     = "FARGATE"
+  network_configuration {
+    assign_public_ip = true
+    security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+  }
+  desired_count = 1
+  depends_on    = [aws_ecs_task_definition.tech-challenge-task-pedido]
+}
 
 # resource "aws_ecs_service" "ecs-service-producao" {
 #   name            = "producao-sgr-service-ecs"
@@ -232,16 +232,16 @@ resource "aws_iam_policy_attachment" "ecs_iam_iam_policy_attachment" {
 #   depends_on    = [aws_ecs_task_definition.tech-challenge-task-producao]
 # }
 
-resource "aws_ecs_service" "ecs-service-mongo" {
-  name            = "mongosgr-service-ecs"
-  cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
-  task_definition = aws_ecs_task_definition.tech-challenge-task-mongo.arn
-  launch_type     = "FARGATE"
-  network_configuration {
-    assign_public_ip = true
-    security_groups  = ["sg-05f8d8ff2e7f81bcc"]
-    subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
-  }
-  desired_count = 1
-  depends_on    = [aws_ecs_task_definition.tech-challenge-task-mongo]
-}
+# resource "aws_ecs_service" "ecs-service-mongo" {
+#   name            = "mongosgr-service-ecs"
+#   cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
+#   task_definition = aws_ecs_task_definition.tech-challenge-task-mongo.arn
+#   launch_type     = "FARGATE"
+#   network_configuration {
+#     assign_public_ip = true
+#     security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+#     subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+#   }
+#   desired_count = 1
+#   depends_on    = [aws_ecs_task_definition.tech-challenge-task-mongo]
+# }
