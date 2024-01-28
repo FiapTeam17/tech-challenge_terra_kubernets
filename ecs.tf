@@ -31,6 +31,8 @@ locals {
   vpc_cidr = "10.123.0.0/16"
   azs      = ["us-east-2a", "us-east-2b"]
 
+  subnets = ["subnet-061048fd0cbb5934c", "subnet-095b2d3b3586d78e9", "subnet-03c5104597a3da0d5"]
+
   public_subnets  = ["10.123.1.0/24", "10.123.2.0/24"]
   private_subnets = ["10.123.3.0/24", "10.123.4.0/24"]
   intra_subnets   = ["10.123.5.0/24", "10.123.6.0/24"]
@@ -211,8 +213,9 @@ resource "aws_ecs_service" "ecs-service-pedido" {
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
-    security_groups  = ["sg-05f8d8ff2e7f81bcc"]
-    subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+    # security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    # subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+    subnets = local.subnets
   }
   desired_count = 1
   depends_on    = [aws_ecs_task_definition.tech-challenge-task-pedido]
@@ -225,8 +228,9 @@ resource "aws_ecs_service" "ecs-service-producao" {
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
-    security_groups  = ["sg-05f8d8ff2e7f81bcc"]
-    subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+    # security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    # subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+    subnets = local.subnets
   }
   desired_count = 1
   depends_on    = [aws_ecs_task_definition.tech-challenge-task-producao]
@@ -239,8 +243,9 @@ resource "aws_ecs_service" "ecs-service-mongo" {
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
-    security_groups  = ["sg-05f8d8ff2e7f81bcc"]
-    subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+    # security_groups  = ["sg-05f8d8ff2e7f81bcc"]
+    # subnets          = ["subnet-06a9e76e0f6dc9819", "subnet-0259ecbde408105f8", "subnet-00d5e89c1c1ced6a1"]
+    subnets = local.subnets
   }
   desired_count = 1
   depends_on    = [aws_ecs_task_definition.tech-challenge-task-mongo]
