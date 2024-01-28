@@ -50,7 +50,7 @@ resource "aws_ecs_cluster" "sgr-service-cluster" {
 
 resource "aws_ecs_task_definition" "tech-challenge-task" {
 
-  for_each = var.ecs_containers 
+  for_each = var.ecs_containers
 
   family                   = "tech-challenge"
   network_mode             = "awsvpc"
