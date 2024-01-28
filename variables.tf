@@ -1,19 +1,9 @@
-locals {
-  mongodb_user = mongodb_username
-  mongodb_pwd  = mongodb_pwd
-}
-
 variable "mssql_login_pwd" {
   type      = string
   sensitive = true
 }
 
-variable "mongodb_username" {
-  type      = string
-  sensitive = true
-}
-
-variable "mongodb_pwd" {
+variable "mongodb_connection_string" {
   type      = string
   sensitive = true
 }
@@ -40,7 +30,7 @@ variable "ecs_containers" {
     },
     "pagamento_service" = {
       image     = "258775715661.dkr.ecr.us-east-2.amazonaws.com/sgr-service-pagamento"
-      db_host   = "mongodb+srv://${local.mongodb_user}:${local.mongodb_pwd}@pagamentodb.ywhqiew.mongodb.net/?retryWrites=true&w=majority"
+      db_host   = var.mongodb_connection_string
       db_schema = "sgr_database_pagamento"
     }
   }
