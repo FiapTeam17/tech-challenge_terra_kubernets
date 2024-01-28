@@ -178,7 +178,7 @@ resource "aws_ecs_service" "ecs-service" {
   depends_on    = [aws_ecs_task_definition.tech-challenge-task-mongo]
 }
 
-resource "aws_ecs_service" "ecs-service" {
+resource "aws_ecs_service" "ecs-service-mongo" {
   name            = "sgr-service-ecs"
   cluster         = aws_ecs_cluster.sgr-service-cluster.id
   task_definition = aws_ecs_task_definition.tech-challenge-task[each.key].arn
