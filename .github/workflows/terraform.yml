@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TF_VAR_mssql_login_pwd: ${{ secrets.RDS_MYSQL_PWD }}
+      TF_VAR_mongodb_connection_string: ${{ secrets.MONGO_CONNECTION_STRING }}
     permissions:
       pull-requests: write
     steps:
