@@ -126,7 +126,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
   }])
 }
 
-resource "aws_ecs_task_definition" "tech-challenge-task-mongo" {
+resource "aws_ecs_task_definition" "tech-challenge-task-pagamento" {
 
   family                   = "tech-challenge-services"
   network_mode             = "awsvpc"
@@ -236,10 +236,10 @@ resource "aws_ecs_service" "ecs-service-producao" {
   depends_on    = [aws_ecs_task_definition.tech-challenge-task-producao]
 }
 
-resource "aws_ecs_service" "ecs-service-mongo" {
-  name            = "mongosgr-service-ecs"
+resource "aws_ecs_service" "ecs-service-pagamento" {
+  name            = "pagamentosgr-service-ecs"
   cluster         = aws_ecs_cluster.sgr-microsservices-cluster.id
-  task_definition = aws_ecs_task_definition.tech-challenge-task-mongo.arn
+  task_definition = aws_ecs_task_definition.tech-challenge-task-pagamento.arn
   launch_type     = "FARGATE"
   network_configuration {
     assign_public_ip = true
@@ -248,5 +248,5 @@ resource "aws_ecs_service" "ecs-service-mongo" {
     subnets = local.subnets
   }
   desired_count = 1
-  depends_on    = [aws_ecs_task_definition.tech-challenge-task-mongo]
+  depends_on    = [aws_ecs_task_definition.tech-challenge-task-pagamento]
 }
