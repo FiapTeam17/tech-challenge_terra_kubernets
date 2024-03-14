@@ -84,6 +84,14 @@ resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
       {
         "name" : "DB_PASSWORD",
         "value" : var.mssql_login_pwd
+      },
+      {
+        "name" : "AWS_ACCESS_KEY_ID",
+        "value" : var.aws_access_key_id
+      },
+      {
+        "name" : "AWS_SECRET_ACCESS_KEY",
+        "value" : var.aws_secret_access_key
       }
     ],
   }])
@@ -121,6 +129,14 @@ resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
       {
         "name" : "DB_PASSWORD",
         "value" : var.mssql_login_pwd
+      },
+      {
+        "name" : "AWS_ACCESS_KEY_ID",
+        "value" : var.aws_access_key_id
+      },
+      {
+        "name" : "AWS_SECRET_ACCESS_KEY",
+        "value" : var.aws_secret_access_key
       }
     ],
   }])
@@ -151,6 +167,14 @@ resource "aws_ecs_task_definition" "tech-challenge-task-pagamento" {
         "name" : "DB_SCHEMA",
         "value" : "sgr_database_pagamento"
       },
+      {
+        "name" : "AWS_ACCESS_KEY_ID",
+        "value" : var.aws_access_key_id
+      },
+      {
+        "name" : "AWS_SECRET_ACCESS_KEY",
+        "value" : var.aws_secret_access_key
+      }
     ],
   }])
 }
