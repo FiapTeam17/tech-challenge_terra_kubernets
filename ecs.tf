@@ -59,7 +59,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task-pedido" {
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   cpu                      = 256
-  memory                   = 512
+  memory                   = 1024
   runtime_platform {
     cpu_architecture        = "X86_64"
     operating_system_family = "LINUX"
@@ -104,7 +104,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task-producao" {
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   cpu                      = 256
-  memory                   = 512
+  memory                   = 1024
   runtime_platform {
     cpu_architecture        = "X86_64"
     operating_system_family = "LINUX"
@@ -149,7 +149,7 @@ resource "aws_ecs_task_definition" "tech-challenge-task-pagamento" {
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   cpu                      = 256
-  memory                   = 512
+  memory                   = 1024
   runtime_platform {
     cpu_architecture        = "X86_64"
     operating_system_family = "LINUX"
